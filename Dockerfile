@@ -1,4 +1,4 @@
-FROM jfloff/alpine-python:3.6-onbuild 
+FROM ubuntu:18.04
 COPY requirements.txt /tmp 
 WORKDIR /tmp 
 RUN apk add --update tzdata
@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 WORKDIR /.
 COPY . /
 
-CMD [ "python", "./monitor.py" ]
+CMD [ "python3", "./monitor.py" ]
