@@ -65,7 +65,7 @@ def on_message(client, userdata, msg):
             mqtt_client.disconnect()
             print('mqtt disconnected')
             if critical_services[jsonData['location']]['ip'] != '':
-                print('restarteble service')
+                print('restartable service')
                 if critical_services[jsonData['location']]['attempts'] == 1:
                     try:
                         print('restarting service')
