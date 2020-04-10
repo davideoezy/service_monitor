@@ -63,7 +63,7 @@ def on_message(client, userdata, msg):
         elif jsonData['status'] == 'offline':
             print('service offline')
             mqtt_client.disconnect()
-            print('mqtt disconnected')
+            print('mqtt disconnected, attempt ' + str(critical_services[jsonData['location']]['attempts'] ))
             if critical_services[jsonData['location']]['ip'] != '':
                 print('restartable service')
                 if critical_services[jsonData['location']]['attempts'] == 1:
@@ -100,8 +100,8 @@ def on_message(client, userdata, msg):
                     pass
             print('incrementing counter')        
             critical_services[jsonData['location']]['attempts'] += 1
-            print('incremented. Sleeping')
-            time.sleep(90)
+            print('incremented to attempts = ' + str(critical_services[jsonData['location']]['attempts']) + '. Sleeping')
+            time.sleep(9)
             print('awake')
 
 mqtt_client = mqtt.Client()
