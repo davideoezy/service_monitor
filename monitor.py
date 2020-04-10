@@ -101,7 +101,7 @@ def on_message(client, userdata, msg):
             print('incrementing counter')        
             critical_services[jsonData['location']]['attempts'] += 1
             print('incremented to attempts = ' + str(critical_services[jsonData['location']]['attempts']) + '. Sleeping')
-            time.sleep(9)
+            time.sleep(90)
             print('awake')
 
 mqtt_client = mqtt.Client()
