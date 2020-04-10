@@ -4,7 +4,7 @@ WORKDIR /tmp
 #RUN apk add --update tzdata
 ENV TZ=Australia/Melbourne
 #RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 WORKDIR /.
 COPY . /
 
