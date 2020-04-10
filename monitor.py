@@ -7,7 +7,7 @@ from restart_service import ssh_restart
 ssh_restart = ssh_restart()
 
 account_sid = "AC07bdafbca4a084659d86bd7110625b41"
-auth_token = "691a5abafa49161c82df48d219230ed4"
+auth_token = "d3408e409d42a4dd60d7de20f7d81c3b"
 twilio_client = Client(account_sid, auth_token)
 
 server_address = "192.168.0.10"
