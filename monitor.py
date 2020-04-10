@@ -35,16 +35,11 @@ critical_services = {
 
 def send_message(location, status):
     msg = 'Your ' + str(location) + ' code is ' + str(status)
-
-    message = twilio_client.messages.create(body=msg, 
-        from_='whatsapp:+14155238886',
-        to='whatsapp:+61410445123'
-        )
+    message = twilio_client.messages.create(body=msg, from_='whatsapp:+14155238886',to='whatsapp:+61410445123')
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     client.subscribe(topics,0)
@@ -57,64 +52,57 @@ def on_disconnect(client, userdata, rc):
 def on_message(client, userdata, msg):
     global critical_services
     global mqtt_client
-    
     data = str(msg.payload.decode("utf-8"))
     jsonData=json.loads(data)    
-
     if jsonData['location'] in critical_service_list:
-
+        print('service identified')
         critical_services[jsonData['location']]['status'] = jsonData['status']
-        
         if jsonData['status'] == 'online':
             critical_services[jsonData['location']]['attempts'] = 0
-
+            print('service online')
         elif jsonData['status'] == 'offline':
-
+            print('service offline')
             mqtt_client.disconnect()
-
+            print('mqtt disconnected')
             if critical_services[jsonData['location']]['ip'] != '':
-
+                print('restartable service')
                 if critical_services[jsonData['location']]['attempts'] == 1:
-
                     try:
                         print('restarting service')
-
                         ssh_restart.remote_service_command(
                             critical_services[jsonData['location']]['ip'], 
                             'restart_service', 
                             critical_services[jsonData['location']]['service']
                             )
-
+                        print('service restarted')
                     except Exception:
-
+                        print('failed service restart')
                         pass
-
                 elif critical_services[jsonData['location']]['attempts'] == 2:
-
+                    print('try restarting device')
                     try:
-
                         ssh_restart.remote_service_command(
                             critical_services[jsonData['location']]['ip'],
                             'restart_device',
                             critical_services[jsonData['location']]['service']
                             )
-
+                        print('device restarted')
                     except Exception:
-
+                        print('failed device restart')
                         pass
-
             if critical_services[jsonData['location']]['attempts'] == 3:
-
+                print('sending message')
                 try:
-
                     send_message(jsonData['location'], jsonData['status'])
-            
+                    print('message sent')
                 except Exception: 
+                    print('failed sending message')
                     pass
-
+            print('incrementing counter')        
             critical_services[jsonData['location']]['attempts'] += 1
-
+            print('incremented. Sleeping')
             time.sleep(90)
+            print('awake')
 
 mqtt_client = mqtt.Client()
 mqtt_client.on_connect = on_connect
@@ -127,5 +115,5 @@ mqtt_client.connect(server_address, keepalive=120)
 # handles reconnecting.
 # Other loop*() functions are available that give a threaded interface and a
 # manual interface.
-mqtt_client.loop_start()
+mqtt_client.loop_forever()
 

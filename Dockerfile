@@ -1,11 +1,10 @@
-FROM jfloff/alpine-python:3.6-onbuild 
-COPY requirements.txt /tmp 
-WORKDIR /tmp 
-RUN apk add --update tzdata
+FROM python:3
+
+WORKDIR /usr/src/app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+#RUN apk add --update tzdata
 ENV TZ=Australia/Melbourne
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-WORKDIR /.
-COPY . /
+COPY . .
 
 CMD [ "python", "./monitor.py" ]
