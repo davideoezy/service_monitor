@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV TZ=Australia/Melbourne
 COPY . .
 
-CMD [ "python", "./monitor.py" ]
+#CMD [ "python", "./monitor.py" ]

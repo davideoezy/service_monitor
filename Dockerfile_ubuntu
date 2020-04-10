@@ -7,4 +7,4 @@ RUN pip3 install -r requirements.txt
 WORKDIR /.
 COPY . /
 
-CMD [ "python3", "./monitor.py" ]
+#CMD [ "python3", "./monitor.py" ]
