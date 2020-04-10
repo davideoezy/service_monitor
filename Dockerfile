@@ -3,7 +3,9 @@ COPY requirements.txt /tmp
 WORKDIR /tmp 
 RUN apk add --update tzdata
 ENV TZ=Australia/Melbourne
-RUN pip install --upgrade pip
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
+     && pip install cython \
+     && apk del .build-deps gcc musl-dev
 RUN pip install -r requirements.txt
 WORKDIR /.
 COPY . /
