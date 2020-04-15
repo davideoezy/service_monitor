@@ -3,6 +3,7 @@ import paho.mqtt.client as mqtt
 import json
 import time
 from restart_service import ssh_restart
+import smtplib 
 
 ssh_restart = ssh_restart()
 
@@ -31,6 +32,23 @@ critical_services = {
     'heater_backend':{'status':'online','attempts':0,
         'ip':'','service':''}
 }
+
+def send_email(location, status):
+    text = 'Your ' + str(location) + ' is ' + str(status)
+    subject = "heater offline"
+    sender = "central.heater@gmail.com"
+    pwd = "3AO40eMJE423"
+    recipient = "davideo.ezy@gmail.com"
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (sender, ", ".join(recipient), subject, text)
+
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.ehlo()
+    server.starttls()
+    server.login(sender, pwd)
+    server.sendmail(sender, recipient, message)
+    server.close()
+
 
 
 def send_message(location, status):
@@ -98,6 +116,12 @@ def on_message(client, userdata, msg):
                 except Exception: 
                     print('failed sending message')
                     pass
+            if critical_services[jsonData['location']]['attempts'] == 4:
+                try:
+                    send_email(jsonData['location'], jsonData['status'])
+                except Exception:
+                    pass
+            
             print('incrementing counter')        
             critical_services[jsonData['location']]['attempts'] += 1
             print('incremented to attempts = ' + str(critical_services[jsonData['location']]['attempts']) + '. Sleeping')
