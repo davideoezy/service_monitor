@@ -15,16 +15,19 @@ server_address = "192.168.0.10"
 
 topics = "status/sensor/#"
 
-critical_service_list = ['lounge','master','heater_controls','heater_relay','heater_backend']
+critical_service_list = ['lounge','temp_aggregator','heater_controls','heater_relay','heater_backend']
 critical_services = {
     'lounge':{'status':'online','attempts':0,
-        'ip':'192.168.0.70','service':'mi_temp_reader_lounge.service'},
+        'ip':'192.168.0.70','service':'mi_temp_reader_lounge_aaa.service'},
 
     'master':{'status':'online','attempts':0,
         'ip':'192.168.0.75','service':'mi_temp_reader_master.service'},
 
     'heater_controls':{'location':'heater_controls','status':'online','attempts':0,
         'ip':'','service':''},
+
+    'temp_aggregator':{'location':'temp_aggregator','status':'online','attempts':0,
+    'ip':'','service':''},
 
     'heater_relay':{'status':'online','attempts':0,
         'ip':'192.168.0.81','service':'heater.service'},
