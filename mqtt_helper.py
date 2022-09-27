@@ -5,7 +5,7 @@ class mqtt_helper():
     def __init__(self, location):
 
         # host
-        self.host = "192.168.0.10"
+        self.host = "192.168.0.115"
 
         # topics & location
         self.location = location
